@@ -40,7 +40,7 @@ pub struct TrackingSummary {
 pub struct LineItem {
     #[serde(rename = "LineItemID")]
     pub line_item_id: Uuid,
-    pub description: String,
+    pub description: Option<String>,
     pub quantity: Option<Decimal>,
     pub unit_amount: Option<Decimal>,
     pub item_code: Option<String>,
@@ -50,7 +50,7 @@ pub struct LineItem {
     pub item: Option<ItemSummary>,
     pub tracking: Vec<TrackingSummary>,
     pub tax_type: Option<String>,
-    pub tax_amount: Decimal,
+    pub tax_amount: Option<Decimal>,
     pub line_amount: Option<Decimal>,
     pub discount_rate: Option<Decimal>,
     pub discount_amount: Option<Decimal>
@@ -60,7 +60,7 @@ impl LineItem {
     #[must_use]
     pub fn into_builder(self) -> Builder {
         let mut builder = Builder::new();
-        builder.description = Some(self.description);
+        builder.description = self.description;
         builder.quantity = self.quantity;
         builder.unit_amount = self.unit_amount;
         builder.item_code = self.item_code;
