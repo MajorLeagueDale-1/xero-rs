@@ -1,7 +1,10 @@
 use serde::Deserialize;
 use uuid::Uuid;
 
-use self::{contact::Contact, invoice::Invoice, purchase_order::PurchaseOrder, quote::Quote};
+use self::{
+    contact::Contact, invoice::Invoice, purchase_order::PurchaseOrder, quote::Quote,
+    item::Item, tracking_category::TrackingCategory,
+};
 
 pub mod connection;
 pub mod contact;
@@ -9,14 +12,18 @@ pub mod invoice;
 pub mod line_item;
 pub mod purchase_order;
 pub mod quote;
+pub mod item;
+pub mod tracking_category;
 
 #[derive(Clone, Deserialize)]
 #[serde(rename_all = "PascalCase")]
 pub enum Data {
     PurchaseOrders(Vec<PurchaseOrder>),
     Invoices(Vec<Invoice>),
+    Items(Vec<Item>),
     Contacts(Vec<Contact>),
     Quotes(Vec<Quote>),
+    TrackingCategory(Vec<TrackingCategory>),
 }
 
 impl Data {
@@ -39,6 +46,15 @@ impl Data {
     }
 
     #[must_use]
+    pub fn get_items(self) -> Option<Vec<Item>> {
+        if let Self::Items(items) = self {
+            Some(items)
+        } else {
+            None
+        }
+    }
+
+    #[must_use]
     pub fn get_contacts(self) -> Option<Vec<Contact>> {
         if let Self::Contacts(contacts) = self {
             Some(contacts)
@@ -51,6 +67,15 @@ impl Data {
     pub fn get_quotes(self) -> Option<Vec<Quote>> {
         if let Self::Quotes(quotes) = self {
             Some(quotes)
+        } else {
+            None
+        }
+    }
+
+    #[must_use]
+    pub fn get_tracking_categories(self) -> Option<Vec<TrackingCategory>> {
+        if let Self::TrackingCategory(tracking_categories) = self {
+            Some(tracking_categories)
         } else {
             None
         }
