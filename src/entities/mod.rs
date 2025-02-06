@@ -13,6 +13,7 @@ pub mod line_item;
 pub mod purchase_order;
 pub mod quote;
 pub mod item;
+pub mod generic;
 pub mod tracking_category;
 
 #[derive(Clone, Deserialize)]

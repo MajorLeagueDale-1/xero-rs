@@ -12,6 +12,7 @@ use crate::{
     contact::Contact,
     error::{Error, Result},
     line_item::{LineAmountType, LineItem},
+    generic::{Pagination},
     Client,
 };
 
@@ -94,30 +95,39 @@ pub struct Invoice {
 
 #[derive(Deserialize)]
 #[serde(rename_all = "PascalCase")]
-struct ListResponse {
-    invoices: Vec<Invoice>,
+pub struct InvoiceResponse {
+    pub id: Uuid,
+    pub status: String,
+    pub provider_name: String,
+    #[serde(rename = "DateTimeUTC")]
+    pub date_time_utc: String,
+    #[serde(rename = "pagination")]
+    pub pagination: Option<Pagination>,
+    pub invoices: Vec<Invoice>,
 }
 
 #[derive(Debug, Serialize, Default)]
 pub struct ListParameters {
     pub r#where: Option<String>,
+    pub page: Option<u32>,
+    pub order: Option<String>,
 }
 
 /// Retrieve a list of invoices.
 #[instrument(skip(client))]
-pub async fn list(client: &Client, parameters: ListParameters) -> Result<Vec<Invoice>> {
-    let response: ListResponse = client.get(ENDPOINT, parameters).await?;
-    Ok(response.invoices)
+pub async fn list(client: &Client, parameters: ListParameters) -> Result<InvoiceResponse> {
+    let response: InvoiceResponse = client.get(ENDPOINT, parameters).await?;
+    Ok(response)
 }
 
-/// Retrieve a single invoice by it's `invoice_id`.
+/// Retrieve a single invoice by its `invoice_id`.
 #[instrument(skip(client))]
-pub async fn get(client: &Client, invoice_id: Uuid) -> Result<Invoice> {
+pub async fn get(client: &Client, invoice_id: Uuid) -> Result<InvoiceResponse> {
     let endpoint = Url::from_str(ENDPOINT)
         .and_then(|endpoint| endpoint.join(&invoice_id.to_string()))
         .map_err(|_| Error::InvalidEndpoint)?;
-    let response: ListResponse = client.get(endpoint, Vec::<String>::default()).await?;
-    response.invoices.into_iter().next().ok_or(Error::NotFound)
+    let response: InvoiceResponse = client.get(endpoint, Vec::<String>::default()).await?;
+    Ok(response)
 }
 
 #[derive(Clone, Debug, Serialize, PartialEq, Eq)]
