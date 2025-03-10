@@ -54,15 +54,19 @@ pub struct Quote {
 
 #[derive(Deserialize)]
 #[serde(rename_all = "PascalCase")]
-struct ListResponse {
-    quotes: Vec<Quote>,
+pub struct ListResponse {
+    pub id: Uuid,
+    pub status: String,
+    pub provider_name: String,
+    #[serde(rename = "DateTimeUTC")]
+    pub date_time_utc: String,
+    pub quotes: Vec<Quote>,
 }
 
 /// Retrieve a list of quotes.
 #[instrument(skip(client))]
-pub async fn list(client: &Client) -> Result<Vec<Quote>> {
-    let response: ListResponse = client.get(ENDPOINT, Vec::<String>::default()).await?;
-    Ok(response.quotes)
+pub async fn list(client: &Client) -> Result<ListResponse> {
+    client.get(ENDPOINT, Vec::<String>::default()).await
 }
 
 /// Retrieve a single quote by it's `quote_id`.

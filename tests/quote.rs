@@ -12,10 +12,10 @@ async fn get_quotes() -> Result<()> {
         .init();
     let client = xero_rs::Client::from_client_credentials(KeyPair::from_env(), None).await?;
 
-    let quotes = xero_rs::quote::list(&client).await?;
-    debug!("found {:?} quotes", quotes.len());
+    let quote_response = xero_rs::quote::list(&client).await?;
+    debug!("found {:?} quotes", quote_response.quotes.len());
 
-    let quote_from_list = quotes.first().unwrap();
+    let quote_from_list = quote_response.quotes.first().unwrap();
     let quote = xero_rs::quote::get(&client, quote_from_list.quote_id).await?;
     assert_eq!(quote_from_list.quote_id, quote.quote_id);
 
