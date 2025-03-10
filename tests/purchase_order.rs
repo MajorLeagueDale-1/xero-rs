@@ -42,6 +42,7 @@ async fn get_purchase_orders() -> Result<()> {
 }
 
 #[tokio::test]
+#[ignore = "skipping destructive api tests by default"]
 async fn create_purchase_order() -> Result<()> {
     setup_logging();
     let client = xero_rs::Client::from_client_credentials(KeyPair::from_env(), None).await?;
