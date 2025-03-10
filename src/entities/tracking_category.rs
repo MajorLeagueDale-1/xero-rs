@@ -22,7 +22,7 @@ pub enum Status {
 #[serde(rename_all = "PascalCase")]
 pub struct CategoryOption {
     #[serde(rename = "TrackingOptionID")]
-    pub tacking_option_id: Uuid,
+    pub tracking_option_id: Uuid,
     pub name: String,
     pub status: Status,
 }
