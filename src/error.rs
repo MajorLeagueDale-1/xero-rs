@@ -46,6 +46,7 @@ pub struct ValidationExceptionElement {
 
 #[derive(Debug, Clone, Deserialize)]
 #[serde(rename_all = "PascalCase")]
+#[allow(unused)]
 pub struct Response {
     error_number: u64,
     message: String,
@@ -55,6 +56,7 @@ pub struct Response {
 
 #[derive(Debug, Clone, Deserialize)]
 #[serde(rename_all = "PascalCase")]
+#[allow(unused)]
 pub struct ForbiddenResponse {
     r#type: Option<String>,
     title: String,
